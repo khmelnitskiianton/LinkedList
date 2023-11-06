@@ -8,6 +8,7 @@
 
 int PrintLogStart (DLinkList_t* myLinkList)
 {
+    system("rm images/*");
     fprintf(myLinkList -> FileLog,  "<!DOCTYPE html>\n"
                                     "<html lang=\"eng\">\n"
                                     "<head>\n"
@@ -39,19 +40,19 @@ int PrintLogFinish (DLinkList_t* myLinkList)
     return 1;
 }
 
-int PrintLogList (DLinkList_t* myLinkList)
+int PrintLogList (DLinkList_t* myLinkList, const char* function)
 {
     fprintf(myLinkList -> FileLog, "\n");
 
-    GenerateGraph (myLinkList);
+    GenerateGraph (myLinkList, function);
     GenerateImage (myLinkList);
-    fprintf(myLinkList -> FileLog, "<img src=\"images/%lu.png\" alt=\"Человек и пароход\">\n", myLinkList -> NumImage);
+    fprintf(myLinkList -> FileLog, "<img src=\"images/%lu.png\" alt=\"Распечатка списка %lu\">\n", myLinkList -> NumImage, myLinkList -> NumImage);
     (myLinkList -> NumImage)++;
 
     return 1;
 }
 
-int GenerateGraph (DLinkList_t* myLinkList)
+int GenerateGraph (DLinkList_t* myLinkList, const char* function)
 {
     myLinkList -> FileGraph = OpenFileGraph();
 
@@ -62,7 +63,7 @@ int GenerateGraph (DLinkList_t* myLinkList)
                                         "edge[color = \"" COLOR_EDGE "\", fontsize = 15];\n"
                                         );
 
-    fprintf(myLinkList -> FileGraph,    "subgraph cluster0 {\n"
+    fprintf(myLinkList -> FileGraph,    "subgraph cluster_list {\n"
                                         "\tnode[style = filled, color = white, fontsize = 10];\n"
                                         "\tedge[color = \"" COLOR_EDGE "\", fontsize = 15];\n"
                                         "\tstyle = \"dashed\";\n"
@@ -71,14 +72,10 @@ int GenerateGraph (DLinkList_t* myLinkList)
 
     WriteListToGraph(myLinkList);
 
-    fprintf (myLinkList -> FileGraph,   "\tlabel = \"Double-Linked List\";\n"
+    fprintf (myLinkList -> FileGraph,   "\tlabel = \"DOUBLE-LINKED LIST called from %s \";\n"
                                         "}\n"
-                                        "HEAD[shape = \"component\", label = \"Head | %d\", style = \"filled\", fillcolor = \"" FILL_BACK_LIST "\"];\n"
-                                        "TAIL[shape = \"component\", label = \"Tail | %d\", style = \"filled\", fillcolor = \"" FILL_BACK_LIST "\"];\n"
-                                        "FREE[shape = \"component\", label = \"Free | %d\", style = \"filled\", fillcolor = \"" FILL_BACK_LIST "\"];\n"
-                                        "CAPACITY[shape = \"house\", label = \"Capacity | %d\", style = \"filled\", fillcolor = \"" FILL_BACK_LIST "\"];\n"
-                                        "CAPACITY -> TAIL -> HEAD -> FREE [ color = \"" FILL_BACK_COLOR "\"];\n",
-                                        myLinkList -> Head, myLinkList -> Tail, myLinkList -> Free, myLinkList -> Capacity
+                                        "All[shape = Mrecord, label = \" HEADER | <f0> Capacity: %d | <f1> Head: %d | <f2> Tail: %d | <f3> Free: %d \", style = \"filled\", fillcolor = \"" FILL_BACK_LIST "\"];\n"
+                                        ,function, myLinkList -> Capacity, myLinkList -> Head, myLinkList -> Tail, myLinkList -> Free
                                         );
 
     WriteVarsToGraph(myLinkList);
@@ -110,7 +107,7 @@ int WriteListToGraph(DLinkList_t* myLinkList)
 {
     for (int i = 0; i < myLinkList -> Capacity; i++)
     {
-        fprintf (myLinkList -> FileGraph, "\t%d [shape = Mrecord, style = filled, fillcolor = \"" FILL_BACK_LIST "\", color = \"#d2691e\", label = \" IP: %d | DATA: " SPECIFIER " | NXT: %d | PRV: %d \"];\n", i, i, *(myLinkList -> Data + i), *(myLinkList -> Next + i), *(myLinkList -> Previous + i));
+        fprintf (myLinkList -> FileGraph, "\t%d [shape = Mrecord, style = filled, fillcolor = \"" FILL_BACK_LIST "\", color = \"#800000\", label = \" IP: %d | DATA: " SPECIFIER " | NXT: %d | PRV: %d \"];\n", i, i, *(myLinkList -> Data + i), *(myLinkList -> Next + i), *(myLinkList -> Previous + i));
     }
 
     fprintf (myLinkList -> FileGraph, "\n\t");
@@ -118,170 +115,26 @@ int WriteListToGraph(DLinkList_t* myLinkList)
     {
         fprintf (myLinkList -> FileGraph, "%d -> ", i);
     }
-    fprintf (myLinkList -> FileGraph, "%d [color = \"" FILL_BACK_COLOR "\"];\n\n");
+    fprintf (myLinkList -> FileGraph, "%d [weight = 10000, color = \"" FILL_BACK_COLOR "\"];\n\n", (myLinkList -> Capacity - 1));
 
-    for (int i = 0; i < (myLinkList -> Capacity - 1); i++)
+    for (int i = 0; i < (myLinkList -> Capacity); i++)
     {
-        if (*(myLinkList -> Previous + i) == -1) fprintf (myLinkList -> FileGraph, "\t%d -> %d [color = \"#00ff00\"]\n", i, *(myLinkList -> Next + i));
-        else fprintf (myLinkList -> FileGraph, "\t%d -> %d [color = \"#000000\"]\n", i, *(myLinkList -> Next + i));
+        if ((*(myLinkList -> Previous + i) == -1) && (*(myLinkList -> Next + i) != 0)) fprintf (myLinkList -> FileGraph, "\t%d -> %d [color = \"#00ff00\", weight = 0]\n", i, *(myLinkList -> Next + i));
+        else if (*(myLinkList -> Next + i) != 0) fprintf (myLinkList -> FileGraph, "\t%d -> %d [color = \"#0000ff\", weight = 0]\n", i, *(myLinkList -> Next + i));
     }
+
+    for (int i = 0; i < (myLinkList -> Capacity); i++)
+    {
+        if ((*(myLinkList -> Previous + i) != -1) && (*(myLinkList -> Previous + i) != 0)) fprintf (myLinkList -> FileGraph, "\t%d -> %d [color = \"#ff0000\", weight = 0]\n", i, *(myLinkList -> Previous + i));
+    }
+
     return 1;
 }
 
 int WriteVarsToGraph(DLinkList_t* myLinkList)
 {
-    fprintf(myLinkList -> FileGraph, "HEAD -> %d [color = \"#7fffd4\"];\n", myLinkList -> Head);
-    fprintf(myLinkList -> FileGraph, "TAIL -> %d [color = \"#7fffd4\"];\n", myLinkList -> Tail);
-    fprintf(myLinkList -> FileGraph, "FREE -> %d [color = \"#7fffd4\"];\n", myLinkList -> Free);
+    fprintf(myLinkList -> FileGraph, "All:<f1> -> %d [color = \"#FFFFFF\"];\n", myLinkList -> Head);
+    fprintf(myLinkList -> FileGraph, "All:<f2> -> %d [color = \"#FFFFFF\"];\n", myLinkList -> Tail);
+    fprintf(myLinkList -> FileGraph, "All:<f3> -> %d [color = \"#FFFFFF\"];\n", myLinkList -> Free);
     return 1;
 }
-
-
-
-
-
-
-
-
-/*
-int printing_stack (DLinkList_t* myLinkList, const char* file, const size_t line, const char* pretty_function)
-{
-    fprintf (myLinkList -> FileLog,"\nStack[%p] called from %s (string: %lld) in function %s\n"
-            "{                  \n"
-            "\tsize        = %d \n"
-            "\tcapacity    = %d \n"
-            "\tdata[%p]         \n"
-            "\t{                \n", myLinkList, file, line, pretty_function, myLinkList -> size, myLinkList -> capacity, ON_HASH(myLinkList -> hash_data, myLinkList -> hash_struct,) myLinkList -> data);
-
-    for (ssize_t i = 0; (i < (myLinkList -> capacity)); i++)
-    {
-        if (i == (myLinkList -> size))                             fprintf(myLinkList -> FileLog,"\t >[%lld] = %d<\n", i, *((myLinkList -> data) + i));
-        else if (*((myLinkList -> data) + i) != POISON_ELEMENT)    fprintf(myLinkList -> FileLog,"\t #[%lld] = %d\n", i, *((myLinkList -> data) + i));
-        else                                                fprintf(myLinkList -> FileLog,"\t @[%lld] = %d(POISON)\n", i, *((myLinkList -> data) + i));
-    }
-    
-    fprintf (myLinkList -> FileLog,"\t} \n"
-            "}   \n");
-    return 1;
-}
-
-int output_error (DLinkList_t* *myLinkList, const char* file, const size_t line, const char* pretty_function, int error_code)
-{   
-    const char* mass_of_errors[N_ERRORS] = {
-        //TODO: array of errors
-    };
-    int z = error_code;
-    unsigned long bin_error = 0;
-    size_t element = 0;
-    int fatal_error = 0;
-    fprintf(myLinkList -> FileLog, "<<<<<!!!!YOU HAVE ERROR.CHECK OUTPUT.TXT OR TERMINAL!!!!>>>>>>>\n");
-    if (z == 1)
-    {
-        fprintf(myLinkList -> FileLog, "\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n"
-            "Stack[%p] called from %s (string: %lld) in function %s\n"
-            "1: [%s]\n", myLinkList, file, line, pretty_function,mass_of_errors[0]);
-        abort();
-    }
-    if (z == 2)
-    {
-        fprintf(myLinkList -> FileLog, "\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n"
-            "Stack[%p] called from %s (string: %lld) in function %s\n"
-            "0: [OK]\n"
-            "1: [%s]\n", myLinkList, file, line, pretty_function,mass_of_errors[1]);
-        abort();
-    }
-
-    fprintf(myLinkList -> FileLog, "\n<<<<<<<<<<<<<<<YOU HAVE ERROR>>>>>>>>>>>>>>>>>\n");
-    fprintf(myLinkList -> FileLog, "\nERROR:\n");
-
-    while (z > 0)
-    {
-        if (z % 2)
-        {
-            bin_error += 1<<(element);
-            fprintf(myLinkList -> FileLog, "1: [%s]\n", mass_of_errors[element]);
-            if(element != 15) fatal_error = 1;
-        }
-        else
-        {
-            fprintf(myLinkList -> FileLog, "0: [OK]\n");
-        }
-        z = z / 2;
-        element++;
-    }
-    fprintf(myLinkList -> FileLog,"ERROR CODE: [%lu]\n\n", bin_error);
-    
-    if (!fatal_error)
-    {
-    fprintf (myLinkList -> FileLog,"Stack[%p] called from %s (string: %lld) in function %s\n"
-    //      "\t\t%s             \n"
-            "{                  \n"
-            "\tsize        = %d \n"
-            "\tcapacity    = %d \n"
-            "\tdata[%p]         \n"
-            "\t{                \n", myLinkList, file, line, pretty_function, myLinkList -> size, myLinkList -> capacity, ON_HASH(myLinkList -> hash_data, myLinkList -> hash_struct,) myLinkList -> data);
-
-    for (ssize_t i = 0; (i < (myLinkList -> capacity)); i++)
-    {
-        if (i == myLinkList -> size)                               fprintf(myLinkList -> FileLog,"\t >[%lld] = %d<\n", i, *((myLinkList -> data) + i));
-        else if (*((myLinkList -> data) + i) != POISON_ELEMENT)    fprintf(myLinkList -> FileLog,"\t #[%lld] = %d\n", i, *((myLinkList -> data) + i));
-        else                                                fprintf(myLinkList -> FileLog,"\t @[%lld] = %d(POISON)\n", i, *((myLinkList -> data) + i));
-    }
-    
-    fprintf (myLinkList -> FileLog,"\t} \n"
-            "}   \n");
-    }
-    file_close(myLinkList -> FileLog);
-    abort();
-    return 1;
-}
-
-int checkStack (DLinkList_t* *myLinkList, const char* func)
-{
-    int error_code = 0;
-    
-    if (!myLinkList)                    
-    {
-        error_code |= 1<<0;
-        return error_code;
-    }
-    if (!(myLinkList -> FileLog))                    
-    {
-        error_code |= 1<<1;
-        return error_code;
-    }
-
-    if (!(myLinkList -> data))
-    {
-        error_code |= 1<<4;
-        return error_code;
-    }
-
-    if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&(!(myLinkList -> ret_value)))
-    {
-        error_code |= 1<<5;
-        return error_code;
-    }
-    if ((myLinkList -> capacity) <= 0)             
-    {
-        error_code |= 1<<6;
-        return error_code;
-    }
-        if ((myLinkList -> size) < 0)                  
-    {
-        error_code |= 1<<7;
-        return error_code;
-    }
-    if ((myLinkList -> size) > (myLinkList -> capacity))  
-    {
-        error_code |= 1<<8;
-        return error_code;
-    }
-    if ((strcmp(func, "int pop(Stack_t*, Elem_t*)") == 0)&&((myLinkList -> size) == 0)) 
-    {
-        error_code |= 1<<9;
-        return error_code;
-    }
-    return error_code;
-}
-*/

@@ -1,0 +1,3 @@
+/mnt/d/Study/C/Linked_List/CMakeFiles/proga.dir
+/mnt/d/Study/C/Linked_List/CMakeFiles/edit_cache.dir
+/mnt/d/Study/C/Linked_List/CMakeFiles/rebuild_cache.dir

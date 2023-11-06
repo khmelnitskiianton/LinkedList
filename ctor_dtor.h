@@ -8,6 +8,6 @@ FILE*   OpenFileLog     (void);
 int     CloseFile       (FILE *file_text);
 size_t  SizeOfData      (DLinkList_t* myLinkList);
 int     SetZeroElement  (DLinkList_t* myLinkList);
-int     LinkFreeList    (DLinkList_t* myLinkList);
+int     LinkFreeList    (Index_t IndexStart,DLinkList_t* myLinkList);
 
 #endif

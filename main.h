@@ -11,10 +11,8 @@ const int    INITIAL_SIZE   = 10;
 const Elem_t POISON_ELEMENT = 666;
 const int    N_ERRORS       = 16;
 const int    MULTIPLIER     = 2;
-const int    MIN_LEN        = 10;
 
 typedef struct DLinkList {
-
     Elem_t*     Data;
     Index_t*    Next;
     Index_t*    Previous;
@@ -36,7 +34,7 @@ typedef struct DLinkList {
 #define SIZE_OF_COMMAND 500
 #define FILL_BACK_COLOR "#ff7f50"
 #define FILL_BACK_LIST "#ffe4c4"
-#define COLOR_EDGE "#ff00ff"
+#define COLOR_EDGE "#800000"
 
 #define ASSERT_MYLIST 1
 #define DEBUG_PRINTING 1
@@ -45,18 +43,6 @@ typedef struct DLinkList {
 #define ON_PRINTING(...) __VA_ARGS__
 #else
 #define ON_PRINTING(...) 
-#endif
-
-#if (ASSERT_MYLIST != 0)
-#define ASSERT_LIST(stk, func)                            \
-        if (checkList(stk, func) != 0)                    \
-        {                                                 \
-            LIST_DUMP (stk, checkList(stk, func))         \
-        }                                                   
-#define LIST_DUMP(stk, error_code) output_error(stk, __FILE__, __LINE__, __PRETTY_FUNCTION__, error_code);
-#else   
-#define ASSERT_LIST(stk, func)                   
-#define LIST_DUMP(stk, error_code)        
 #endif
 
 #endif

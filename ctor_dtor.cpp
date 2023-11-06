@@ -24,7 +24,7 @@ int ListCtor (DLinkList_t* myLinkList)
     myLinkList -> Free = 1;
 
 
-    LinkFreeList(myLinkList);
+    LinkFreeList(1, myLinkList);
 
     //TODO: check errors
     return 1;
@@ -79,9 +79,9 @@ int SetZeroElement (DLinkList_t* myLinkList)
     return 1;
 }
 
-int LinkFreeList (DLinkList_t* myLinkList)
+int LinkFreeList (Index_t IndexStart,DLinkList_t* myLinkList)
 {
-    for (int i = 1; i < (myLinkList -> Capacity); i++)
+    for (int i = IndexStart; i < (myLinkList -> Capacity); i++)
     {
         if (i == ((myLinkList -> Capacity) - 1)) *((myLinkList -> Next) + i) = 0;
         else                                     *((myLinkList -> Next) + i) = i + 1;

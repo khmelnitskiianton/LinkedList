@@ -1,43 +1,67 @@
 digraph G{
 rankdir = LR;
 bgcolor = "#ff7f50";
-node[color = "#ff00ff", fontsize = 10];
-edge[color = "#ff00ff", fontsize = 15];
-subgraph cluster0 {
+node[color = "#800000", fontsize = 10];
+edge[color = "#800000", fontsize = 15];
+subgraph cluster_list {
 	node[style = filled, color = white, fontsize = 10];
-	edge[color = "#ff00ff", fontsize = 15];
+	edge[color = "#800000", fontsize = 15];
 	style = "dashed";
 	color = "#800080";
-	0 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#d2691e", label = " IP: 0 | DATA: 666 | NXT: 0 | PRV: 0 "];
-	1 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#d2691e", label = " IP: 1 | DATA: 666 | NXT: 2 | PRV: -1 "];
-	2 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#d2691e", label = " IP: 2 | DATA: 666 | NXT: 3 | PRV: -1 "];
-	3 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#d2691e", label = " IP: 3 | DATA: 666 | NXT: 4 | PRV: -1 "];
-	4 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#d2691e", label = " IP: 4 | DATA: 666 | NXT: 5 | PRV: -1 "];
-	5 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#d2691e", label = " IP: 5 | DATA: 666 | NXT: 6 | PRV: -1 "];
-	6 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#d2691e", label = " IP: 6 | DATA: 666 | NXT: 7 | PRV: -1 "];
-	7 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#d2691e", label = " IP: 7 | DATA: 666 | NXT: 8 | PRV: -1 "];
-	8 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#d2691e", label = " IP: 8 | DATA: 666 | NXT: 9 | PRV: -1 "];
-	9 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#d2691e", label = " IP: 9 | DATA: 666 | NXT: 0 | PRV: -1 "];
+	0 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 0 | DATA: 666 | NXT: 0 | PRV: 0 "];
+	1 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 1 | DATA: 51 | NXT: 2 | PRV: 0 "];
+	2 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 2 | DATA: 20 | NXT: 7 | PRV: 1 "];
+	3 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 3 | DATA: 33 | NXT: 4 | PRV: 7 "];
+	4 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 4 | DATA: 77 | NXT: 8 | PRV: 3 "];
+	5 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 5 | DATA: 58 | NXT: 6 | PRV: 8 "];
+	6 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 6 | DATA: 29 | NXT: 9 | PRV: 5 "];
+	7 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 7 | DATA: 8 | NXT: 3 | PRV: 2 "];
+	8 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 8 | DATA: 9 | NXT: 5 | PRV: 4 "];
+	9 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 9 | DATA: 48 | NXT: 10 | PRV: 6 "];
+	10 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 10 | DATA: 58 | NXT: 11 | PRV: 9 "];
+	11 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 11 | DATA: 10 | NXT: 0 | PRV: 10 "];
+	12 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 12 | DATA: 666 | NXT: 13 | PRV: -1 "];
+	13 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 13 | DATA: 666 | NXT: 14 | PRV: -1 "];
+	14 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 14 | DATA: 666 | NXT: 15 | PRV: -1 "];
+	15 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 15 | DATA: 666 | NXT: 16 | PRV: -1 "];
+	16 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 16 | DATA: 666 | NXT: 17 | PRV: -1 "];
+	17 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 17 | DATA: 666 | NXT: 18 | PRV: -1 "];
+	18 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 18 | DATA: 666 | NXT: 19 | PRV: -1 "];
+	19 [shape = Mrecord, style = filled, fillcolor = "#ffe4c4", color = "#800000", label = " IP: 19 | DATA: 666 | NXT: 0 | PRV: -1 "];
 
-	0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 0 [color = "#ff7f50"];
+	0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11 -> 12 -> 13 -> 14 -> 15 -> 16 -> 17 -> 18 -> 19 [weight = 10000, color = "#ff7f50"];
 
-	0 -> 0 [color = "#000000"]
-	1 -> 2 [color = "#00ff00"]
-	2 -> 3 [color = "#00ff00"]
-	3 -> 4 [color = "#00ff00"]
-	4 -> 5 [color = "#00ff00"]
-	5 -> 6 [color = "#00ff00"]
-	6 -> 7 [color = "#00ff00"]
-	7 -> 8 [color = "#00ff00"]
-	8 -> 9 [color = "#00ff00"]
-	label = "Double-Linked List";
+	1 -> 2 [color = "#0000ff", weight = 0]
+	2 -> 7 [color = "#0000ff", weight = 0]
+	3 -> 4 [color = "#0000ff", weight = 0]
+	4 -> 8 [color = "#0000ff", weight = 0]
+	5 -> 6 [color = "#0000ff", weight = 0]
+	6 -> 9 [color = "#0000ff", weight = 0]
+	7 -> 3 [color = "#0000ff", weight = 0]
+	8 -> 5 [color = "#0000ff", weight = 0]
+	9 -> 10 [color = "#0000ff", weight = 0]
+	10 -> 11 [color = "#0000ff", weight = 0]
+	12 -> 13 [color = "#00ff00", weight = 0]
+	13 -> 14 [color = "#00ff00", weight = 0]
+	14 -> 15 [color = "#00ff00", weight = 0]
+	15 -> 16 [color = "#00ff00", weight = 0]
+	16 -> 17 [color = "#00ff00", weight = 0]
+	17 -> 18 [color = "#00ff00", weight = 0]
+	18 -> 19 [color = "#00ff00", weight = 0]
+	2 -> 1 [color = "#ff0000", weight = 0]
+	3 -> 7 [color = "#ff0000", weight = 0]
+	4 -> 3 [color = "#ff0000", weight = 0]
+	5 -> 8 [color = "#ff0000", weight = 0]
+	6 -> 5 [color = "#ff0000", weight = 0]
+	7 -> 2 [color = "#ff0000", weight = 0]
+	8 -> 4 [color = "#ff0000", weight = 0]
+	9 -> 6 [color = "#ff0000", weight = 0]
+	10 -> 9 [color = "#ff0000", weight = 0]
+	11 -> 10 [color = "#ff0000", weight = 0]
+	label = "DOUBLE-LINKED LIST called from int main() ";
 }
-HEAD[shape = "component", label = "Head | 0", style = "filled", fillcolor = "#ffe4c4"];
-TAIL[shape = "component", label = "Tail | 0", style = "filled", fillcolor = "#ffe4c4"];
-FREE[shape = "component", label = "Free | 1", style = "filled", fillcolor = "#ffe4c4"];
-CAPACITY[shape = "house", label = "Capacity | 10", style = "filled", fillcolor = "#ffe4c4"];
-CAPACITY -> TAIL -> HEAD -> FREE [ color = "#ff7f50"];
-HEAD -> 0 [color = "#7fffd4"];
-TAIL -> 0 [color = "#7fffd4"];
-FREE -> 1 [color = "#7fffd4"];
+All[shape = Mrecord, label = " HEADER | <f0> Capacity: 20 | <f1> Head: 0 | <f2> Tail: 11 | <f3> Free: 12 ", style = "filled", fillcolor = "#ffe4c4"];
+All:<f1> -> 0 [color = "#FFFFFF"];
+All:<f2> -> 11 [color = "#FFFFFF"];
+All:<f3> -> 12 [color = "#FFFFFF"];
 }
