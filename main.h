@@ -20,8 +20,8 @@ typedef struct DLinkList {
     Index_t     Capacity;
     Index_t     Head;
     Index_t     Tail;
-    Index_t     Free;
-    
+    Index_t     Free;    
+
     size_t      NumImage;
     FILE*       FileLog;
     FILE*       FileGraph;

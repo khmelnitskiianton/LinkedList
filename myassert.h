@@ -16,6 +16,11 @@ enum CODES_OF_ERRORS {
     BAD_REALLOC_DATA            = 8,
     BAD_REALLOC_NEXT            = 9,
     BAD_REALLOC_PREV            = 10,
+    SECOND_TIME_PUSH_FIRST      = 11,
+    CALL_NOT_START              = 12,
+    DONT_CALL_PUSH_FIRST_BEFORE = 13,
+    TAIL_IS_NULL_WTF            = 14,
+    HEAD_IS_NULL_WTF            = 15,
 };
 
 #ifdef DEBUG
@@ -24,7 +29,7 @@ enum CODES_OF_ERRORS {
         {                                                                                                           \
             if (!(check))                                                                                           \
             {                                                                                                       \
-                printf(MAGENTA ">>>>> Error in code! Error code: %d <<<<<\n", error_code);                                      \
+                printf(MAGENTA ">>>>> Error in code! Error code: %s <<<<<\n", #error_code);                                      \
                 printf("In File: %s, In Line: %d, In Function: %s\n" RESET, __FILE__, __LINE__,__PRETTY_FUNCTION__); \
                 ending;                                                                                             \
             }                                                                                                       \

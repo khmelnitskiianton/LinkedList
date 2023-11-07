@@ -17,23 +17,23 @@ int main()
 
     PrintLogList (&myLinkList, __PRETTY_FUNCTION__);
 
-    PushBack(51, &myLinkList, __PRETTY_FUNCTION__);
-    PushBack(20, &myLinkList, __PRETTY_FUNCTION__);
-    PushBack(33, &myLinkList, __PRETTY_FUNCTION__);
-    PushBack(77, &myLinkList, __PRETTY_FUNCTION__);
-    PushBack(58, &myLinkList, __PRETTY_FUNCTION__);
-    PushBack(29, &myLinkList, __PRETTY_FUNCTION__);
+    PushFirst(100, &myLinkList);
+    PushBack(51, &myLinkList);
+    PushFront(20, &myLinkList);
+    PushBack(33, &myLinkList);
+    PushFront(77, &myLinkList);
+    PushBack(58, &myLinkList);
 
-    InsertAfter(2, 8, &myLinkList, __PRETTY_FUNCTION__);
+    InsertAfter(2, 8, &myLinkList);
 
-    InsertBefore(5, 9, &myLinkList, __PRETTY_FUNCTION__);
+    InsertBefore(4, 9, &myLinkList);
     
-    PushBack(48, &myLinkList, __PRETTY_FUNCTION__);
+    PushBack(48, &myLinkList);
 
-    Resize(&myLinkList, __PRETTY_FUNCTION__);
+    Resize(&myLinkList);
 
-    PushBack(58, &myLinkList, __PRETTY_FUNCTION__);
-    PushBack(10, &myLinkList, __PRETTY_FUNCTION__);
+    PushBack(58, &myLinkList);
+    PushBack(10, &myLinkList);
 
     PrintLogFinish (&myLinkList);
     ListDtor (&myLinkList);

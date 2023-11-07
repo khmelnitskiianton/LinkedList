@@ -8,9 +8,31 @@
 #include "myassert.h"
 #include "ctor_dtor.h"
 
-//TODO: че делать с head и как это работает
+int PushFirst (Elem_t InsertValue, DLinkList_t* myLinkList)
+{
+    static int isFirst = 1;
 
-int InsertAfter (Index_t InsertIndex, Elem_t InsertValue, DLinkList_t* myLinkList, const char* function)
+    MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)   
+    MYASSERT(isFirst, SECOND_TIME_PUSH_FIRST, return 0)
+    MYASSERT((myLinkList -> Tail == 0) && (myLinkList -> Head == 0), CALL_NOT_START,return 0)
+
+    Index_t IndexFree = myLinkList -> Free;
+
+    myLinkList -> Head = IndexFree;
+    myLinkList -> Tail = IndexFree;
+    myLinkList -> Free = *(myLinkList -> Next + IndexFree);
+    
+    *(myLinkList -> Data + IndexFree) = InsertValue;
+    *(myLinkList -> Previous + IndexFree) = 0;
+    *(myLinkList -> Next + IndexFree) = 0;
+
+    PrintLogList (myLinkList, __PRETTY_FUNCTION__);
+    isFirst = 0;
+    return 1;
+}
+
+
+int InsertAfter (Index_t InsertIndex, Elem_t InsertValue, DLinkList_t* myLinkList)
 {
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT((InsertIndex < myLinkList -> Capacity) && (*(myLinkList -> Next + InsertIndex) != 0) && (*(myLinkList -> Previous + InsertIndex) != -1), BAD_INDEX_IN_INSERTION, return 0)
@@ -27,12 +49,12 @@ int InsertAfter (Index_t InsertIndex, Elem_t InsertValue, DLinkList_t* myLinkLis
     *(myLinkList -> Previous + IndexFree) = InsertIndex;
     *(myLinkList -> Next + IndexFree) = IndexNext;
     
-    PrintLogList (myLinkList, function);
+    PrintLogList (myLinkList, __PRETTY_FUNCTION__);
 
     return 1;
 }
 
-int InsertBefore (Index_t InsertIndex, Elem_t InsertValue, DLinkList_t* myLinkList, const char* function)
+int InsertBefore (Index_t InsertIndex, Elem_t InsertValue, DLinkList_t* myLinkList)
 {
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT((InsertIndex < myLinkList -> Capacity) && (*(myLinkList -> Previous + InsertIndex) != 0) && (*(myLinkList -> Previous + InsertIndex) != -1), BAD_INDEX_IN_INSERTION, return 0)
@@ -49,23 +71,21 @@ int InsertBefore (Index_t InsertIndex, Elem_t InsertValue, DLinkList_t* myLinkLi
     *(myLinkList -> Next + IndexFree) = InsertIndex;
     *(myLinkList -> Previous + IndexFree) = IndexPrevious; 
 
-    PrintLogList (myLinkList, function);
+    PrintLogList (myLinkList, __PRETTY_FUNCTION__);
 
     return 1;
 }
 
-int PushBack (Elem_t InsertValue, DLinkList_t* myLinkList, const char* function)
+int PushBack (Elem_t InsertValue, DLinkList_t* myLinkList)
 {
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT(myLinkList -> Free, DATA_IS_OVERFLOW, return 0)
+    MYASSERT(myLinkList -> Tail, TAIL_IS_NULL_WTF, return 0)
 
     Index_t IndexFree = myLinkList -> Free;
     Index_t IndexTail = myLinkList -> Tail;
 
-    if (IndexTail != 0)
-    {
-        *(myLinkList -> Next + IndexTail) = IndexFree;
-    }
+    *(myLinkList -> Next + IndexTail) = IndexFree;
 
     myLinkList -> Free = *(myLinkList -> Next + IndexFree);
     myLinkList -> Tail = IndexFree;
@@ -74,12 +94,12 @@ int PushBack (Elem_t InsertValue, DLinkList_t* myLinkList, const char* function)
     *(myLinkList -> Next + IndexFree) = 0;
     *(myLinkList -> Previous + IndexFree) = IndexTail;
     
-    PrintLogList (myLinkList, function);
+    PrintLogList (myLinkList, __PRETTY_FUNCTION__);
 
     return 1;
 }
 
-int PopBack (DLinkList_t* myLinkList, const char* function)
+int PopBack (DLinkList_t* myLinkList)
 {
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT(myLinkList -> Tail, POP_BUT_DATA_IS_EMPTY, return 0)
@@ -95,26 +115,55 @@ int PopBack (DLinkList_t* myLinkList, const char* function)
     *(myLinkList -> Previous + IndexTail) = -1;
     *(myLinkList -> Next + IndexPrevTail) = 0; 
 
-    PrintLogList (myLinkList, function);    
+    PrintLogList (myLinkList, __PRETTY_FUNCTION__);    
     
     return 1;
 }
 
-int PushFront (Elem_t InsertValue, DLinkList_t* myLinkList, const char* function)
+int PushFront (Elem_t InsertValue, DLinkList_t* myLinkList)
 {
-    //TODO:
-    PrintLogList (myLinkList, function);  
+    MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
+    MYASSERT(myLinkList -> Free, DATA_IS_OVERFLOW, return 0)
+    MYASSERT(myLinkList -> Head, HEAD_IS_NULL_WTF, return 0)
+
+    Index_t IndexFree = myLinkList -> Free;
+    Index_t IndexHead = myLinkList -> Head;
+
+    *(myLinkList -> Previous + IndexHead) = IndexFree;
+
+    myLinkList -> Free = *(myLinkList -> Next + IndexFree);
+    myLinkList -> Head = IndexFree;
+
+    *(myLinkList -> Data + IndexFree) = InsertValue;
+    *(myLinkList -> Previous + IndexFree) = 0;
+    *(myLinkList -> Next + IndexFree) = IndexHead;
+
+    PrintLogList (myLinkList, __PRETTY_FUNCTION__);
     return 1;
 }
 
-int PopFront (DLinkList_t* myLinkList, const char* function)
+int PopFront (DLinkList_t* myLinkList)
 {
-    //TODO:
-    PrintLogList (myLinkList, function);  
+    MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
+    MYASSERT(myLinkList -> Head, POP_BUT_DATA_IS_EMPTY, return 0)
+
+    Index_t IndexHead = myLinkList -> Head;
+    Index_t IndexNextHead = *(myLinkList -> Next + IndexHead); 
+    myLinkList -> Head = *(myLinkList -> Next + IndexHead);
+
+    *(myLinkList -> Data + IndexHead) = POISON_ELEMENT;
+    *(myLinkList -> Next + IndexHead) = myLinkList -> Free;
+    myLinkList -> Free = IndexHead;
+
+    *(myLinkList -> Previous + IndexHead) = -1;
+    *(myLinkList -> Previous + IndexNextHead) = 0; 
+
+    PrintLogList (myLinkList, __PRETTY_FUNCTION__);    
+    
     return 1;
 }
 
-int Erase (Index_t EraseIndex, DLinkList_t* myLinkList, const char* function)
+int Erase (Index_t EraseIndex, DLinkList_t* myLinkList)
 {
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT((*(myLinkList -> Previous + EraseIndex) != -1) && (EraseIndex > 0) && (EraseIndex < myLinkList -> Capacity), BAD_INDEX_TO_ERASE, return 0)
@@ -130,12 +179,12 @@ int Erase (Index_t EraseIndex, DLinkList_t* myLinkList, const char* function)
     *(myLinkList -> Previous + EraseIndex) = -1;
     myLinkList -> Free = EraseIndex;
 
-    PrintLogList (myLinkList, function);
+    PrintLogList (myLinkList, __PRETTY_FUNCTION__);
 
     return 1;
 }
 
-int Resize (DLinkList_t* myLinkList, const char* function)
+int Resize (DLinkList_t* myLinkList)
 {
     MYASSERT(!(myLinkList -> Free), DATA_IS_NOT_FULL, return 0)    
 
@@ -151,43 +200,6 @@ int Resize (DLinkList_t* myLinkList, const char* function)
     myLinkList -> Free = OldCapacity;
     LinkFreeList(OldCapacity, myLinkList);
 
-    PrintLogList (myLinkList, function);  
+    PrintLogList (myLinkList, __PRETTY_FUNCTION__);  
     return 1;
 }
-
-//-----------------------------------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------------------------------
-
-
-// int EnterValue (DLinkList_t* myLinkList, const char* function)
-// {
-//     Elem_t InsertValue = POISON_ELEMENT;
-//     Index_t InsertIndex = -2;
-//     int end = 1;
-//     while (end)
-//     {
-//         printf ("\nEnter index and value to insert in the Tail: ");
-//         scanf ("%d %d", &InsertIndex, &InsertValue);
-//         clean_buffer();
-//         Inserting (InsertIndex, InsertValue, myLinkList);
-//         PrintLogList (myLinkList, function);
-//         end = StopEnter ();
-//     }
-//     return 1;
-// }
-// int StopEnter (void)
-// {
-//     char answer = 0;
-//     printf ("\nWant to continue entering? [Y/N]: ");
-//     scanf ("%c", &answer);
-//     clean_buffer ();
-//     if (toupper(answer) == 'Y') return 1;
-//     else return 0;
-// }
-
-// int clean_buffer (void)
-// {
-//     int ch = 0;                     
-//     while((ch = getchar ()) != '\n') {}   
-//     return 1;
-// }
