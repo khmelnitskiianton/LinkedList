@@ -1,8 +1,6 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-int PushFirst (Elem_t InsertValue, DLinkList_t* myLinkList);
-
 int InsertAfter (Index_t InsertIndex, Elem_t InsertValue, DLinkList_t* myLinkList);
 int InsertBefore (Index_t InsertIndex, Elem_t InsertValue, DLinkList_t* myLinkList);
 

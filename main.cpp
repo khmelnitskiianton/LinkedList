@@ -17,7 +17,7 @@ int main()
 
     PrintLogList (&myLinkList, __PRETTY_FUNCTION__);
 
-    PushFirst(100, &myLinkList);
+    PushBack(190, &myLinkList);
     PushBack(51, &myLinkList);
     PushFront(20, &myLinkList);
     PushBack(33, &myLinkList);

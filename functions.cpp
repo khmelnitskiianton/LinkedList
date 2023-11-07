@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #include "main.h"
 #include "functions.h"
@@ -8,35 +7,12 @@
 #include "myassert.h"
 #include "ctor_dtor.h"
 
-int PushFirst (Elem_t InsertValue, DLinkList_t* myLinkList)
-{
-    static int isFirst = 1;
-
-    MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)   
-    MYASSERT(isFirst, SECOND_TIME_PUSH_FIRST, return 0)
-    MYASSERT((myLinkList -> Tail == 0) && (myLinkList -> Head == 0), CALL_NOT_START,return 0)
-
-    Index_t IndexFree = myLinkList -> Free;
-
-    myLinkList -> Head = IndexFree;
-    myLinkList -> Tail = IndexFree;
-    myLinkList -> Free = *(myLinkList -> Next + IndexFree);
-    
-    *(myLinkList -> Data + IndexFree) = InsertValue;
-    *(myLinkList -> Previous + IndexFree) = 0;
-    *(myLinkList -> Next + IndexFree) = 0;
-
-    PrintLogList (myLinkList, __PRETTY_FUNCTION__);
-    isFirst = 0;
-    return 1;
-}
-
-
 int InsertAfter (Index_t InsertIndex, Elem_t InsertValue, DLinkList_t* myLinkList)
 {
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT((InsertIndex < myLinkList -> Capacity) && (*(myLinkList -> Next + InsertIndex) != 0) && (*(myLinkList -> Previous + InsertIndex) != -1), BAD_INDEX_IN_INSERTION, return 0)
     MYASSERT(myLinkList -> Free, DATA_IS_OVERFLOW, return 0)
+    MYASSERT((myLinkList -> Tail < myLinkList -> Capacity) && (myLinkList -> Head < myLinkList -> Capacity), TAIL_OR_HEAD_OUT_OF_CAPACITY, return 0)
 
     Index_t IndexFree = myLinkList -> Free;
     Index_t IndexNext = *(myLinkList -> Next + InsertIndex);
@@ -59,7 +35,8 @@ int InsertBefore (Index_t InsertIndex, Elem_t InsertValue, DLinkList_t* myLinkLi
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT((InsertIndex < myLinkList -> Capacity) && (*(myLinkList -> Previous + InsertIndex) != 0) && (*(myLinkList -> Previous + InsertIndex) != -1), BAD_INDEX_IN_INSERTION, return 0)
     MYASSERT(myLinkList -> Free, DATA_IS_OVERFLOW, return 0)
-    
+    MYASSERT((myLinkList -> Tail < myLinkList -> Capacity) && (myLinkList -> Head < myLinkList -> Capacity), TAIL_OR_HEAD_OUT_OF_CAPACITY, return 0)
+
     Index_t IndexFree = myLinkList -> Free;
     Index_t IndexPrevious = *(myLinkList -> Previous + InsertIndex);
 
@@ -80,7 +57,24 @@ int PushBack (Elem_t InsertValue, DLinkList_t* myLinkList)
 {
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT(myLinkList -> Free, DATA_IS_OVERFLOW, return 0)
-    MYASSERT(myLinkList -> Tail, TAIL_IS_NULL_WTF, return 0)
+    MYASSERT((myLinkList -> Tail < myLinkList -> Capacity) && (myLinkList -> Head < myLinkList -> Capacity), TAIL_OR_HEAD_OUT_OF_CAPACITY, return 0)
+
+    if ((myLinkList -> Tail == 0) && (myLinkList -> Head == 0)) 
+    {
+        Index_t IndexFree = myLinkList -> Free;
+
+        myLinkList -> Head = IndexFree;
+        myLinkList -> Tail = IndexFree;
+        myLinkList -> Free = *(myLinkList -> Next + IndexFree);
+    
+        *(myLinkList -> Data + IndexFree) = InsertValue;
+        *(myLinkList -> Previous + IndexFree) = 0;
+        *(myLinkList -> Next + IndexFree) = 0;
+
+        PrintLogList (myLinkList, __PRETTY_FUNCTION__);
+
+        return 1;
+    }
 
     Index_t IndexFree = myLinkList -> Free;
     Index_t IndexTail = myLinkList -> Tail;
@@ -103,6 +97,7 @@ int PopBack (DLinkList_t* myLinkList)
 {
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT(myLinkList -> Tail, POP_BUT_DATA_IS_EMPTY, return 0)
+    MYASSERT((myLinkList -> Tail < myLinkList -> Capacity) && (myLinkList -> Head < myLinkList -> Capacity), TAIL_OR_HEAD_OUT_OF_CAPACITY, return 0)
 
     Index_t IndexTail = myLinkList -> Tail;
     Index_t IndexPrevTail = *(myLinkList -> Previous + IndexTail); 
@@ -124,7 +119,24 @@ int PushFront (Elem_t InsertValue, DLinkList_t* myLinkList)
 {
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT(myLinkList -> Free, DATA_IS_OVERFLOW, return 0)
-    MYASSERT(myLinkList -> Head, HEAD_IS_NULL_WTF, return 0)
+    MYASSERT((myLinkList -> Tail < myLinkList -> Capacity) && (myLinkList -> Head < myLinkList -> Capacity), TAIL_OR_HEAD_OUT_OF_CAPACITY, return 0)
+
+    if ((myLinkList -> Tail == 0) && (myLinkList -> Head == 0)) 
+    {
+        Index_t IndexFree = myLinkList -> Free;
+
+        myLinkList -> Head = IndexFree;
+        myLinkList -> Tail = IndexFree;
+        myLinkList -> Free = *(myLinkList -> Next + IndexFree);
+    
+        *(myLinkList -> Data + IndexFree) = InsertValue;
+        *(myLinkList -> Previous + IndexFree) = 0;
+        *(myLinkList -> Next + IndexFree) = 0;
+
+        PrintLogList (myLinkList, __PRETTY_FUNCTION__);
+
+        return 1;
+    }
 
     Index_t IndexFree = myLinkList -> Free;
     Index_t IndexHead = myLinkList -> Head;
@@ -146,6 +158,7 @@ int PopFront (DLinkList_t* myLinkList)
 {
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT(myLinkList -> Head, POP_BUT_DATA_IS_EMPTY, return 0)
+    MYASSERT((myLinkList -> Tail < myLinkList -> Capacity) && (myLinkList -> Head < myLinkList -> Capacity), TAIL_OR_HEAD_OUT_OF_CAPACITY, return 0)
 
     Index_t IndexHead = myLinkList -> Head;
     Index_t IndexNextHead = *(myLinkList -> Next + IndexHead); 
@@ -168,6 +181,7 @@ int Erase (Index_t EraseIndex, DLinkList_t* myLinkList)
     MYASSERT(myLinkList, BAD_POINTER_PASSED_IN_FUNC, return 0)
     MYASSERT((*(myLinkList -> Previous + EraseIndex) != -1) && (EraseIndex > 0) && (EraseIndex < myLinkList -> Capacity), BAD_INDEX_TO_ERASE, return 0)
     MYASSERT(((myLinkList -> Previous + EraseIndex) != 0) && ((myLinkList -> Next + EraseIndex) != 0),ERASE_HEAD_OR_TAIL,return 0)
+    MYASSERT((myLinkList -> Tail < myLinkList -> Capacity) && (myLinkList -> Head < myLinkList -> Capacity), TAIL_OR_HEAD_OUT_OF_CAPACITY, return 0)
 
     Index_t IndexNext = *(myLinkList -> Next + EraseIndex);
     Index_t IndexPrevious = *(myLinkList -> Previous + EraseIndex);
@@ -187,6 +201,7 @@ int Erase (Index_t EraseIndex, DLinkList_t* myLinkList)
 int Resize (DLinkList_t* myLinkList)
 {
     MYASSERT(!(myLinkList -> Free), DATA_IS_NOT_FULL, return 0)    
+    MYASSERT((myLinkList -> Tail < myLinkList -> Capacity) && (myLinkList -> Head < myLinkList -> Capacity), TAIL_OR_HEAD_OUT_OF_CAPACITY, return 0)
 
     Index_t OldCapacity = myLinkList -> Capacity;
     (myLinkList -> Capacity) = (myLinkList -> Capacity) * MULTIPLIER;
